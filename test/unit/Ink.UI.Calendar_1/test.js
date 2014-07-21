@@ -17,7 +17,7 @@ module('main', {
         mkCalendar({});
     },
     teardown: function () {
-        // InkElement.remove(testWrapper);
+        InkElement.remove(testWrapper);
     }
 });
 
@@ -148,20 +148,19 @@ test('_get(Next|Prev)Month when hitting a limit', function () {
 test('validDayFn', function () {
     dt._options.validDayFn = sinon.stub().returns(false);
     dt.setDate('2000-01-01');
-    dt.showMonth();
+    dt.monthView();
 
     var findEnabled = function (button) {
-        return (/disabled/.test(button.className));
+        return !(/disabled/.test(button.className));
     };
-    var buttons = Ink.ss('tbody a', dt.getElement());
+    var buttons = Ink.ss('.month tr:not(.header) td', dt.getElement());
     ok(InkArray.some(buttons, findEnabled),
-        'No buttons are disabled');
+        'All buttons are disabled');
 
     var spy = dt._options.validDayFn = sinon.spy(sinon.stub().returns(true));
-    dt.showMonth();
-    buttons = dt._monthContainer.getElementsByTagName('a');
-    ok(!spy.notCalled);
-    ok(!InkArray.some(buttons, findEnabled),
+    dt.monthView();
+    ok(spy.called);
+    ok(InkArray.some(buttons, findEnabled),
         'No buttons are disabled, I made all days valid with validDayFn');
 
     var lastCall = spy.getCall(30);
@@ -265,17 +264,9 @@ test('dateCmpUntil', function () {
 });
 
 test('daysInMonth', function () {
-    equal(dt._daysInMonth(2000, 1), 31);
-    equal(dt._daysInMonth(2000, 2), 29);
-    equal(dt._daysInMonth(2001, 2), 28);
-});
-
-test('updateDate', function () {
-    dt._element.value = '11/11/2012';
-    dt._updateDate();
-    equal(dt._year, 2012);
-    equal(dt._month, 10);
-    equal(dt._day, 11);
+    equal(dt._daysInMonth(2000, 0), 31);
+    equal(dt._daysInMonth(2000, 1), 29);
+    equal(dt._daysInMonth(2001, 1), 28);
 });
 
 test('set', function () {
@@ -286,29 +277,22 @@ test('set', function () {
     equal(dt.getDate(), 10);
 });
 
-test('show', function () {
-    equal(Css.getStyle(dt._containerObject, 'display'), 'none');
-    dt.monthView();
-    equal(Css.getStyle(dt._containerObject, 'display'), 'block');
-});
-
 test('destroy', function () {
-    ok(testWrapper.children.length > 1 || testWrapper.firstChild !== dtElm, 'sanity check. if this fails, review the test because you\'ve changed the DOM structure of this component');
+    ok(testWrapper.children.length === 1, 'sanity check. if this fails, review the test because you\'ve changed the DOM structure of this component');
     dt.destroy();
-    equal(testWrapper.children.length, 1, 'destroyed remaining instances');
-    strictEqual(testWrapper.firstChild, dtElm, 'the only element there is our original input');
+    equal(testWrapper.children.length, 0, 'removed from the DOM');
 });
 
 test('regression: months have correct amount of days', function () {
     mkCalendar({
         startDate: '2014-02-01' });
     dt.monthView();
-    equal(Ink.ss('.ink-calendar-month [data-cal-day]', testWrapper).length, 28);
+    equal(Ink.ss('[data-cal-day]', testWrapper).length, 28);
 
     mkCalendar({
         startDate: '2014-01-01' });
     dt.monthView();
-    equal(Ink.ss('.ink-calendar-month [data-cal-day]', testWrapper).length, 31);
+    equal(Ink.ss('[data-cal-day]', testWrapper).length, 31);
 });
 
 test('regression: days start in the correct week day by filling with an appropriate amount of "empties"', function () {
@@ -321,23 +305,19 @@ test('regression: days start in the correct week day by filling with an appropri
      * 23 24 25 26 27 28 29     24 25 26 27 28 29 30
      * 30 31                    31                  
      *
-     * 6 empties before "1"     5 empties before "1"
+     * 1 day in the first line  2 days in the first line
      */
 
-    dt.destroy();
+    equal(Ink.ss('[data-cal-day]', getFirstLine(0)).length, 1);
 
-    equal(Ink.ss('.ink-calendar-empty', getFirstLine(0)).length, 6);
-    dt.destroy();
-
-    equal(Ink.ss('.ink-calendar-empty', getFirstLine(1)).length, 5);
-    dt.destroy();
+    equal(Ink.ss('[data-cal-day]', getFirstLine(1)).length, 2);
 
     function getFirstLine(startWeekDay) {
         mkCalendar({
             startDate: '2014-03-01',
             startWeekDay: startWeekDay });
         dt.monthView();
-        var firstLine = Ink.s('.ink-calendar-month .ink-calendar-header + ul', testWrapper);
+        var firstLine = Ink.s('.header + tr', testWrapper);
         ok(firstLine, 'sanity check');
         return firstLine;
     }
