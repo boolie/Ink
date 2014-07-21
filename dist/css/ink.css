@@ -105,7 +105,7 @@
   text-align: left;
 }
 
-.align-center, .ink-calendar thead, .ink-calendar tbody.month td {
+.align-center, .ink-calendar thead, .ink-calendar tbody td {
   text-align: center;
 }
 
@@ -7714,6 +7714,7 @@ table.ink-table tbody > tr.yellow td {
 
 .ink-calendar {
   position: absolute;
+  table-layout: fixed;
   border-collapse: separate;
   padding: 0.2em;
   background: white;
@@ -7743,12 +7744,6 @@ table.ink-table tbody > tr.yellow td {
 }
 .ink-calendar thead {
   background: #f2f2f2;
-  -moz-border-radius-topleft: 2px;
-  -webkit-border-top-left-radius: 2px;
-  border-top-left-radius: 2px;
-  -moz-border-radius-topright: 2px;
-  -webkit-border-top-right-radius: 2px;
-  border-top-right-radius: 2px;
 }
 .ink-calendar thead a {
   text-decoration: none;
@@ -7763,20 +7758,28 @@ table.ink-table tbody > tr.yellow td {
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
   border-top-left-radius: 2px;
+  -moz-border-radius-bottomleft: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+  border-bottom-left-radius: 2px;
 }
 .ink-calendar thead .next {
   -moz-border-radius-topright: 2px;
   -webkit-border-top-right-radius: 2px;
   border-top-right-radius: 2px;
+  -moz-border-radius-bottomright: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  border-bottom-right-radius: 2px;
 }
 .ink-calendar tbody {
   font-size: 0.875em;
 }
-.ink-calendar tbody.month .header {
-  color: #aaa;
+.ink-calendar tbody .header {
+  color: #999999;
+}
+.ink-calendar tbody .header td {
   border-bottom: 1px solid #e6e6e6;
 }
-.ink-calendar tbody.month td a {
+.ink-calendar tbody td a {
   padding: 0 .6em;
   display: block;
   text-decoration: none;
@@ -7786,12 +7789,17 @@ table.ink-table tbody > tr.yellow td {
   -o-border-radius: 2px;
   border-radius: 2px;
 }
-.ink-calendar tbody.month td a:hover {
+.ink-calendar tbody td a:hover {
   background: #e6e6e6;
 }
-.ink-calendar tbody.month td.active a {
+.ink-calendar tbody td.active a {
   background: #0069d6;
   color: white;
+}
+.ink-calendar tbody td.disabled a {
+  cursor: default;
+  background: none;
+  color: #cccccc;
 }
 
 body.ink-drawer {
