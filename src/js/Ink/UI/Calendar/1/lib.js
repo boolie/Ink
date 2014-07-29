@@ -1,3 +1,9 @@
+/**
+ * Calendar widget (if you want a datepicker, see Ink.UI.DatePicker_1)
+ * @module Ink.UI.Calendar_1
+ * @version 1
+ */
+
 Ink.createModule('Ink.UI.Calendar', 1, ['Ink.UI.Common_1', 'Ink.Dom.Event_1', 'Ink.Dom.Element_1', 'Ink.Dom.Css_1', 'Ink.Util.Array_1'], function (Common, Event, InkElement, Css, InkArray) {
     'use strict';
 
@@ -66,7 +72,7 @@ Ink.createModule('Ink.UI.Calendar', 1, ['Ink.UI.Common_1', 'Ink.Dom.Event_1', 'I
      * @param {Object}              [options.wDay]              Week day names. Example: { 0:'Sunday', 1:'Monday', ...}. Defaults to english week day names.
      * @param {Object}              [options.month]             Month names. Example: { 1: 'January', 2: 'February', ...}. Defaults to the english month names.
      *
-     * @sample Ink_UI_DatePicker_1.html
+     * @sample Ink_UI_Calendar_1.html
      */
     function Calendar() {
         Common.BaseUIComponent.apply(this, arguments);
